@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import br.com.euvickson.pokedex_compose.model.Pokemon
+import br.com.euvickson.pokedex_compose.ui.components.PokemonListItem
 import br.com.euvickson.pokedex_compose.ui.theme.Pokedex_ComposeTheme
 
 class MainActivity : ComponentActivity() {
