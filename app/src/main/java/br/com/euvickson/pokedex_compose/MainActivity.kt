@@ -8,11 +8,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import br.com.euvickson.pokedex_compose.model.Pokemon
-import br.com.euvickson.pokedex_compose.ui.components.PokemonListItem
+import br.com.euvickson.pokedex_compose.api.PokemonService
 import br.com.euvickson.pokedex_compose.ui.theme.Pokedex_ComposeTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,7 +25,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+
+                    val coroutineScope = rememberCoroutineScope()
+
+                    LaunchedEffect(key1 = Unit) {
+                        coroutineScope.launch {
+                            //val service = PokemonService.getPokemonInstance().getFullListPokemon()
+                        }
+                    }
                 }
             }
         }
@@ -34,12 +42,4 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    Pokedex_ComposeTheme {
-        Greeting("Android")
-    }
 }
