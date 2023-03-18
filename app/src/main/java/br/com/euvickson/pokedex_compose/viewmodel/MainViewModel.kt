@@ -23,13 +23,22 @@ class MainViewModel: ViewModel() {
                     .replace("/", "").toInt()
 
                 val resultPokemonInfo = PokemonService.getPokemonInstance().getPokemon(number)
-
-                pokemonList.value += Pokemon(
-                    pokedexId = resultPokemonInfo.id,
-                    name = resultPokemonInfo.name,
-                    imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
-                    type1 = resultPokemonInfo.types[0].type.name
-                )
+                if (resultPokemonInfo.types.size < 2) {
+                    pokemonList.value += Pokemon(
+                        pokedexId = resultPokemonInfo.id,
+                        name = resultPokemonInfo.name,
+                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                        type1 = resultPokemonInfo.types[0].type.name
+                    )
+                } else {
+                    pokemonList.value += Pokemon(
+                        pokedexId = resultPokemonInfo.id,
+                        name = resultPokemonInfo.name,
+                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                        type1 = resultPokemonInfo.types[0].type.name,
+                        type2 = resultPokemonInfo.types[1].type.name
+                    )
+                }
             }
         }
     }
