@@ -13,10 +13,9 @@ import com.bumptech.glide.integration.compose.GlideImage
 fun PokemonListItem(pokemon: Pokemon) {
     Column() {
         GlideImage(model = pokemon.imageUrl, contentDescription = "Pokemon Image")
-        Row() {
-            //pokemon.pokemonTypes.forEach {
-              //  Text(text = it.type.name)
-           // }
+        Row {
+            Text(text = pokemon.type1)
+            pokemon.type2?.let { Text(text = it) }
         }
     }
 }
