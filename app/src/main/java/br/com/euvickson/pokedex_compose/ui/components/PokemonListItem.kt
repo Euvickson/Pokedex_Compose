@@ -14,9 +14,9 @@ fun PokemonListItem(pokemon: Pokemon) {
     Column() {
         GlideImage(model = pokemon.imageUrl, contentDescription = "Pokemon Image")
         Row() {
-            pokemon.pokemonTypes.forEach {
-                Text(text = it.type.name)
-            }
+            //pokemon.pokemonTypes.forEach {
+              //  Text(text = it.type.name)
+           // }
         }
     }
 }

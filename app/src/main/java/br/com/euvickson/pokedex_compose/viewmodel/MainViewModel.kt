@@ -18,6 +18,19 @@ class MainViewModel: ViewModel() {
         viewModelScope.launch {
             val pokemonListResponse = PokemonService.getPokemonInstance().getFullListPokemon().results
 
+            pokemonListResponse.forEach {
+                val number = it.url.replace("https://pokeapi.co/api/v2/pokemon/", "")
+                    .replace("/", "").toInt()
+
+                val resultPokemonInfo = PokemonService.getPokemonInstance().getPokemon(number)
+
+                pokemonList.value += Pokemon(
+                    pokedexId = resultPokemonInfo.id,
+                    name = resultPokemonInfo.name,
+                    imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                    type1 = resultPokemonInfo.types[0].type.name
+                )
+            }
         }
     }
 }
