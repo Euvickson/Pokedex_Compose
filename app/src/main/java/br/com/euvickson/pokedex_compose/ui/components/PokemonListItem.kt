@@ -22,6 +22,7 @@ fun PokemonListItem(pokemon: Pokemon) {
             modifier = Modifier
         )
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+            Text(text = "#${pokemon.formattedNumber}")
             Text(text = pokemon.type1)
             pokemon.type2?.let { Text(text = it) }
         }

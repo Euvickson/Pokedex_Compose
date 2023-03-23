@@ -6,4 +6,6 @@ data class Pokemon (
     val imageUrl: String,
     val type1: String,
     val type2: String? = null
-        )
+        ) {
+    val formattedNumber = pokedexId.toString().padStart(length = 3, padChar = '0')
+}
