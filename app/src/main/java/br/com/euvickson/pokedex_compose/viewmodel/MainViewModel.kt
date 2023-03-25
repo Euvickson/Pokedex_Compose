@@ -13,32 +13,36 @@ class MainViewModel: ViewModel() {
     val listFlow: StateFlow<List<Pokemon>>
         get() = pokemonList
 
-
+    var message: String? = null
     init {
         viewModelScope.launch {
-            val pokemonListResponse = PokemonService.getPokemonInstance().getFullListPokemon().results
+            try {
+                val pokemonListResponse = PokemonService.getPokemonInstance().getFullListPokemon().results
 
-            pokemonListResponse.forEach {
-                val number = it.url.replace("https://pokeapi.co/api/v2/pokemon/", "")
-                    .replace("/", "").toInt()
+                pokemonListResponse.forEach {
+                    val number = it.url.replace("https://pokeapi.co/api/v2/pokemon/", "")
+                        .replace("/", "").toInt()
 
-                val resultPokemonInfo = PokemonService.getPokemonInstance().getPokemon(number)
-                if (resultPokemonInfo.types.size < 2) {
-                    pokemonList.value += Pokemon(
-                        pokedexId = resultPokemonInfo.id,
-                        name = resultPokemonInfo.name,
-                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
-                        type1 = resultPokemonInfo.types[0].type.name
-                    )
-                } else {
-                    pokemonList.value += Pokemon(
-                        pokedexId = resultPokemonInfo.id,
-                        name = resultPokemonInfo.name,
-                        imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
-                        type1 = resultPokemonInfo.types[0].type.name,
-                        type2 = resultPokemonInfo.types[1].type.name
-                    )
+                    val resultPokemonInfo = PokemonService.getPokemonInstance().getPokemon(number)
+                    if (resultPokemonInfo.types.size < 2) {
+                        pokemonList.value += Pokemon(
+                            pokedexId = resultPokemonInfo.id,
+                            name = resultPokemonInfo.name,
+                            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                            type1 = resultPokemonInfo.types[0].type.name
+                        )
+                    } else {
+                        pokemonList.value += Pokemon(
+                            pokedexId = resultPokemonInfo.id,
+                            name = resultPokemonInfo.name,
+                            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                            type1 = resultPokemonInfo.types[0].type.name,
+                            type2 = resultPokemonInfo.types[1].type.name
+                        )
+                    }
                 }
+            } catch (e: Exception) {
+                message = "Não foi possível carregar a lista de Pokemons. Verifique a sua conexão"
             }
         }
     }
