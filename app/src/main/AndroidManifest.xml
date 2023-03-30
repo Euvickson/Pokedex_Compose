@@ -14,7 +14,7 @@
         android:theme="@style/Theme.Pokedex_Compose"
         tools:targetApi="31">
         <activity
-            android:name=".ItemActivity"
+            android:name=".DescriptionActivity"
             android:exported="false"
             android:label="@string/title_activity_item"
             android:theme="@style/Theme.Pokedex_Compose" />
