@@ -1,6 +1,7 @@
 package br.com.euvickson.pokedex_compose.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,11 +17,13 @@ import com.bumptech.glide.integration.compose.GlideImage
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun PokemonListItem(pokemon: Pokemon) {
+fun PokemonListItem(pokemon: Pokemon, onNavigate: (Int) -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
-            .height(300.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            .height(300.dp)
+            .clickable {onNavigate(pokemon.pokedexId)},
+        horizontalAlignment = Alignment.CenterHorizontally) {
         GlideImage(
             model = pokemon.imageUrl,
             contentDescription = "Pokemon Image",
@@ -34,8 +37,12 @@ fun PokemonListItem(pokemon: Pokemon) {
                 Text(pokemon.name, fontWeight = FontWeight.Bold, fontSize = 24.sp)
 
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(text = pokemon.type1, modifier = Modifier.background(Color.LightGray).padding(horizontal = 32.dp))
-                    pokemon.type2?.let { Text(text = it, modifier = Modifier.background(Color.LightGray).padding(horizontal = 32.dp)) }
+                    Text(text = pokemon.type1, modifier = Modifier
+                        .background(Color.LightGray)
+                        .padding(horizontal = 32.dp))
+                    pokemon.type2?.let { Text(text = it, modifier = Modifier
+                        .background(Color.LightGray)
+                        .padding(horizontal = 32.dp)) }
                 }
 
             }
