@@ -39,18 +39,19 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val mainViewModel = viewModel(modelClass = MainViewModel::class.java)
-                    val list by mainViewModel.listFlow.collectAsState()
+                    val pokemonList by mainViewModel.listFlow.collectAsState()
                     val navController = rememberNavController()
 
                     NavHost(navController = navController, startDestination = "main") {
                         composable("main") {
-                            CreatePokemonList(list, navController)
+                            ListScreen(pokemonList, navController)
                         }
-                        composable("description/{id}", arguments = listOf(navArgument("id") {type = NavType.IntType})) {
-                            Column() {
-                                Text(text = "Trying to show in the screen")
-                                Text(text = "Pokemon id: ${it.arguments?.getInt("id")}")
-                            }
+                        composable(
+                            "description/{id}",
+                            arguments = listOf(navArgument("id") { type = NavType.IntType })
+                        ) {
+                            val pokemon = pokemonList.find { pokemon -> pokemon.pokedexId == it.arguments?.getInt("id") }
+                            DetailScreen(pokemon)
                         }
                     }
 
@@ -60,13 +61,19 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    private fun CreatePokemonList(list: List<Pokemon>, navController: NavHostController) {
+    private fun DetailScreen(pokemon: Pokemon?) {
+        Text(text = "Trying to show in the screen")
+        Text(text = "Pokemon id: ${pokemon?.name}")
+    }
+
+    @Composable
+    private fun ListScreen(pokemonList: List<Pokemon>, navController: NavHostController) {
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (list.isEmpty()) {
+            if (pokemonList.isEmpty()) {
                 item {
                     CircularProgressIndicator(
                         modifier = Modifier
@@ -76,7 +83,7 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             } else {
-                items(list) { pokemon ->
+                items(pokemonList) { pokemon ->
                     PokemonListItem(pokemon = pokemon) {
                         navController.navigate("description/${pokemon.pokedexId}")
                     }
