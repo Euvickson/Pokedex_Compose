@@ -3,10 +3,7 @@ package br.com.euvickson.pokedex_compose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,9 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import br.com.euvickson.pokedex_compose.model.Pokemon
 import br.com.euvickson.pokedex_compose.ui.components.PokemonListItem
 import br.com.euvickson.pokedex_compose.ui.theme.Pokedex_ComposeTheme
@@ -42,14 +41,19 @@ class MainActivity : ComponentActivity() {
                     val mainViewModel = viewModel(modelClass = MainViewModel::class.java)
                     val list by mainViewModel.listFlow.collectAsState()
                     val navController = rememberNavController()
+
                     NavHost(navController = navController, startDestination = "main") {
                         composable("main") {
                             CreatePokemonList(list, navController)
                         }
-                        composable("description") {
-                            Text(text = "Trying to show in the screen")
+                        composable("description/{id}", arguments = listOf(navArgument("id") {type = NavType.IntType})) {
+                            Column() {
+                                Text(text = "Trying to show in the screen")
+                                Text(text = "Pokemon id: ${it.arguments?.getInt("id")}")
+                            }
                         }
                     }
+
                 }
             }
         }
@@ -74,7 +78,7 @@ class MainActivity : ComponentActivity() {
             } else {
                 items(list) { pokemon ->
                     PokemonListItem(pokemon = pokemon) {
-                        navController.navigate("description")
+                        navController.navigate("description/${pokemon.pokedexId}")
                     }
                 }
             }

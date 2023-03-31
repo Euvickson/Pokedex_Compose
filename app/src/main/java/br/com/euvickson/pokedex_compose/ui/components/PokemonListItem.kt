@@ -27,7 +27,7 @@ fun PokemonListItem(pokemon: Pokemon, onNavigate: (Int) -> Unit) {
         GlideImage(
             model = pokemon.imageUrl,
             contentDescription = "Pokemon Image",
-            modifier = Modifier
+            modifier = Modifier.height(200.dp).width(200.dp)
         )
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
