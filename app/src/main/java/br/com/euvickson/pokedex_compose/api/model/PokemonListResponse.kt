@@ -12,8 +12,19 @@ data class PokemonResponse (
 data class PokemonInfo(
     val id: Int,
     val name: String,
-    val types: List<PokemonType>
+    val types: List<PokemonType>,
+    val moves: List<PokemonMoves>
 )
+
+data class PokemonMoves (
+    val move: Move,
+//    val version_group_details: List
+        )
+
+data class Move (
+    val name: String,
+    val url: String
+        )
 
 data class PokemonType (
     val slot: Int,

@@ -65,20 +65,37 @@ class MainActivity : ComponentActivity() {
         nullablePokemon?.let {pokemon ->
 
             Column(modifier = Modifier.fillMaxSize()) {
-                Row(modifier = Modifier.padding(16.dp).fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Icon(Icons.Rounded.ArrowBack, contentDescription = "")
                     Text(text = "Pokemon Nº #${pokemon.formattedNumber}")
                     Icon(Icons.Rounded.ArrowForward, contentDescription = "")
                 }
 
-                GlideImage(
-                    model = pokemon.imageUrl,
-                    contentDescription = "Pokemon Image",
-                    modifier = Modifier.height(200.dp).width(200.dp)
-                )
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+                    GlideImage(
+                        model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pokemon.pokedexId}.gif",
+                        contentDescription = "Pokemon Image",
+                        modifier = Modifier
+                            .heightIn(max = 125.dp, min = 100.dp)
+                            .widthIn(max = 125.dp, min = 100.dp)
+                    )
+
+                    GlideImage(
+                        model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/shiny/${pokemon.pokedexId}.gif",
+                        contentDescription = "Pokemon Image",
+                        modifier = Modifier
+                            .heightIn(max = 125.dp, min = 100.dp)
+                            .widthIn(max = 125.dp, min = 100.dp)
+                    )
+                }
+
+                Text(text = "Pokemon move: ${pokemon.moves.size}")
+
             }
 
-        } ?: Text(text = "An error occurred during the detail loading")
+        } ?: Text(text = "An error occurred during the pokemon detail loading")
     }
 
     @Composable
