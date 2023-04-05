@@ -3,10 +3,14 @@ package br.com.euvickson.pokedex_compose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
@@ -16,6 +20,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -95,11 +101,19 @@ class MainActivity : ComponentActivity() {
                 Text(text = "Pokemon move: ${pokemon.moves.size}")
                 Text(text = "Pokemon move Learned at level ${pokemon.moves[0].version_group_details[0].level_learned_at}")
 
-                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                LazyHorizontalGrid(rows = GridCells.Fixed(3), modifier = Modifier.fillMaxWidth()) {
                     pokemon.moves.forEach {move ->
-                        item {
-                            if (move.version_group_details[0].level_learned_at != 0) {
-                                Text(text = "${move.move.name} Learned at level ${move.version_group_details[0].level_learned_at}")
+                        if (move.version_group_details[0].level_learned_at != 0) {
+                            item {
+                                Box(
+                                    modifier = Modifier.padding(8.dp)
+                                        .aspectRatio(1f)
+                                        .clip(RoundedCornerShape(5.dp))
+                                        .background(Color.Green),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(text = "${move.move.name} Learned at level ${move.version_group_details[0].level_learned_at}")
+                                }
                             }
                         }
                     }
