@@ -5,6 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
@@ -92,6 +93,17 @@ class MainActivity : ComponentActivity() {
                 }
 
                 Text(text = "Pokemon move: ${pokemon.moves.size}")
+                Text(text = "Pokemon move Learned at level ${pokemon.moves[0].version_group_details[0].level_learned_at}")
+
+                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                    pokemon.moves.forEach {move ->
+                        item {
+                            if (move.version_group_details[0].level_learned_at != 0) {
+                                Text(text = "${move.move.name} Learned at level ${move.version_group_details[0].level_learned_at}")
+                            }
+                        }
+                    }
+                }
 
             }
 

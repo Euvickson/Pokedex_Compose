@@ -16,16 +16,6 @@ data class PokemonInfo(
     val moves: List<PokemonMoves>
 )
 
-data class PokemonMoves (
-    val move: Move,
-//    val version_group_details: List
-        )
-
-data class Move (
-    val name: String,
-    val url: String
-        )
-
 data class PokemonType (
     val slot: Int,
     val type: Type
@@ -34,3 +24,19 @@ data class PokemonType (
 data class Type (
     val name: String
 )
+
+data class PokemonMoves (
+    val move: Move,
+    val version_group_details: List<VersionDetail>
+        )
+
+data class VersionDetail (
+    val level_learned_at: Int
+        )
+
+data class Move (
+    val name: String,
+    val url: String
+        )
+
+
