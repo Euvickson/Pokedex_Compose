@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.items
@@ -22,7 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -101,18 +103,25 @@ class MainActivity : ComponentActivity() {
                 Text(text = "Pokemon move: ${pokemon.moves.size}")
                 Text(text = "Pokemon move Learned at level ${pokemon.moves[0].version_group_details[0].level_learned_at}")
 
-                LazyHorizontalGrid(rows = GridCells.Fixed(3), modifier = Modifier.fillMaxWidth()) {
+                LazyHorizontalGrid(rows = GridCells.Fixed(2), modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)) {
                     pokemon.moves.forEach {move ->
                         if (move.version_group_details[0].level_learned_at != 0) {
                             item {
                                 Box(
-                                    modifier = Modifier.padding(8.dp)
-                                        .aspectRatio(1f)
-                                        .clip(RoundedCornerShape(5.dp))
-                                        .background(Color.Green),
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .clip(RoundedCornerShape(20.dp))
+                                        .background(Color(0xFFAAFF00))
+                                        .padding(horizontal = 8.dp),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    Text(text = "${move.move.name} Learned at level ${move.version_group_details[0].level_learned_at}")
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(text = "${move.version_group_details[0].level_learned_at}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                                        Icon(Icons.Rounded.ArrowForward, "Level Arrow", modifier = Modifier)
+                                        Text(text = move.move.name, fontSize = 20.sp, fontStyle = FontStyle.Italic)
+                                    }
                                 }
                             }
                         }
