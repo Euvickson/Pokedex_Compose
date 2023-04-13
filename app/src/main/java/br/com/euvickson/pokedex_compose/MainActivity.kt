@@ -3,20 +3,23 @@ package br.com.euvickson.pokedex_compose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -57,8 +60,13 @@ class MainActivity : ComponentActivity() {
                         composable("main") {
                             ListScreen(pokemonList, navController)
                         }
-                        composable("description/{id}", arguments = listOf(navArgument("id") { type = NavType.IntType })) {
-                            val pokemon = pokemonList.find { pokemon -> pokemon.pokedexId == it.arguments?.getInt("id") }
+                        composable(
+                            "description/{id}",
+                            arguments = listOf(navArgument("id") { type = NavType.IntType })
+                        ) {
+                            val pokemon = pokemonList.find { pokemon ->
+                                pokemon.pokedexId == it.arguments?.getInt("id")
+                            }
                             DetailScreen(pokemon)
                         }
                     }
@@ -71,18 +79,26 @@ class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalGlideComposeApi::class)
     @Composable
     private fun DetailScreen(nullablePokemon: Pokemon?) {
-        nullablePokemon?.let {pokemon ->
+
+        var isClicked by remember { mutableStateOf(false) }
+
+        nullablePokemon?.let { pokemon ->
 
             Column(modifier = Modifier.fillMaxSize()) {
-                Row(modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                Row(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
+                ) {
                     Icon(Icons.Rounded.ArrowBack, contentDescription = "")
                     Text(text = "Pokemon Nº #${pokemon.formattedNumber}")
                     Icon(Icons.Rounded.ArrowForward, contentDescription = "")
                 }
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceAround) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceAround
+                ) {
                     GlideImage(
                         model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/${pokemon.pokedexId}.gif",
                         contentDescription = "Pokemon Image",
@@ -103,31 +119,63 @@ class MainActivity : ComponentActivity() {
                 Text(text = "Pokemon move: ${pokemon.moves.size}")
                 Text(text = "Pokemon move Learned at level ${pokemon.moves[0].version_group_details[0].level_learned_at}")
 
-                LazyHorizontalGrid(rows = GridCells.Fixed(2), modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)) {
-                    pokemon.moves.forEach {move ->
-                        if (move.version_group_details[0].level_learned_at != 0) {
-                            item {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .clip(RoundedCornerShape(20.dp))
-                                        .background(Color(0xFFAAFF00))
-                                        .padding(horizontal = 8.dp),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Row(verticalAlignment = Alignment.CenterVertically) {
-                                        Text(text = "${move.version_group_details[0].level_learned_at}", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                                        Icon(Icons.Rounded.ArrowForward, "Level Arrow", modifier = Modifier)
-                                        Text(text = move.move.name, fontSize = 20.sp, fontStyle = FontStyle.Italic)
+                IconButton(
+                    onClick = {
+                        isClicked = !isClicked
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(modifier = Modifier
+                        .fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                        Text(text = "Moves")
+                        Icon(
+                            if (isClicked) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight,
+                            "Icon Moves"
+                        )
+                    }
+                }
+
+                    AnimatedVisibility(visible = isClicked) {
+                        LazyHorizontalGrid(
+                            rows = GridCells.Fixed(2), modifier = Modifier
+                                .fillMaxWidth()
+                                .height(100.dp)
+                                .background(Color.LightGray)
+                        ) {
+                            pokemon.moves.forEach { move ->
+                                if (move.version_group_details[0].level_learned_at != 0) {
+                                    item {
+                                        Box(
+                                            modifier = Modifier
+                                                .padding(8.dp)
+                                                .clip(RoundedCornerShape(20.dp))
+                                                .background(Color(0xFFAAFF00))
+                                                .padding(horizontal = 8.dp),
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                                Text(
+                                                    text = "${move.version_group_details[0].level_learned_at}",
+                                                    fontSize = 20.sp,
+                                                    fontWeight = FontWeight.Bold
+                                                )
+                                                Icon(
+                                                    Icons.Rounded.ArrowForward,
+                                                    "Level Arrow",
+                                                    modifier = Modifier
+                                                )
+                                                Text(
+                                                    text = move.move.name,
+                                                    fontSize = 20.sp,
+                                                    fontStyle = FontStyle.Italic
+                                                )
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-
             }
 
         } ?: Text(text = "An error occurred during the pokemon detail loading")
