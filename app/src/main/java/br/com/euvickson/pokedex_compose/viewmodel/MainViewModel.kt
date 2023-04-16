@@ -30,7 +30,8 @@ class MainViewModel: ViewModel() {
                             name = resultPokemonInfo.name,
                             imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
                             type1 = resultPokemonInfo.types[0].type.name,
-                            moves = resultPokemonInfo.moves
+                            moves = resultPokemonInfo.moves,
+                            stats = resultPokemonInfo.stats
                         )
                     } else {
                         pokemonList.value += Pokemon(
@@ -39,7 +40,8 @@ class MainViewModel: ViewModel() {
                             imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
                             type1 = resultPokemonInfo.types[0].type.name,
                             type2 = resultPokemonInfo.types[1].type.name,
-                            moves = resultPokemonInfo.moves
+                            moves = resultPokemonInfo.moves,
+                            stats = resultPokemonInfo.stats
                         )
                     }
                 }

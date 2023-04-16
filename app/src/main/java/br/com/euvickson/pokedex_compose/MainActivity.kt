@@ -4,7 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -81,10 +80,11 @@ class MainActivity : ComponentActivity() {
     private fun DetailScreen(nullablePokemon: Pokemon?) {
 
         var isClicked by remember { mutableStateOf(false) }
+        var statusIsClicked by remember { mutableStateOf(false) }
 
         nullablePokemon?.let { pokemon ->
 
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Row(
                     modifier = Modifier
                         .padding(16.dp)
@@ -116,18 +116,21 @@ class MainActivity : ComponentActivity() {
                     )
                 }
 
-                Text(text = "Pokemon move: ${pokemon.moves.size}")
-                Text(text = "Pokemon move Learned at level ${pokemon.moves[0].version_group_details[0].level_learned_at}")
-
                 IconButton(
                     onClick = {
                         isClicked = !isClicked
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                        Text(text = "Moves")
+                    Row(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color(0xFF65CABB))
+                            .padding(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "MOVES", fontWeight = FontWeight.Bold, fontSize = 16.sp)
                         Icon(
                             if (isClicked) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight,
                             "Icon Moves"
@@ -135,47 +138,82 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                    AnimatedVisibility(visible = isClicked) {
-                        LazyHorizontalGrid(
-                            rows = GridCells.Fixed(2), modifier = Modifier
-                                .fillMaxWidth()
-                                .height(100.dp)
-                                .background(Color.LightGray)
-                        ) {
-                            pokemon.moves.forEach { move ->
-                                if (move.version_group_details[0].level_learned_at != 0) {
-                                    item {
-                                        Box(
-                                            modifier = Modifier
-                                                .padding(8.dp)
-                                                .clip(RoundedCornerShape(20.dp))
-                                                .background(Color(0xFFAAFF00))
-                                                .padding(horizontal = 8.dp),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                                Text(
-                                                    text = "${move.version_group_details[0].level_learned_at}",
-                                                    fontSize = 20.sp,
-                                                    fontWeight = FontWeight.Bold
-                                                )
-                                                Icon(
-                                                    Icons.Rounded.ArrowForward,
-                                                    "Level Arrow",
-                                                    modifier = Modifier
-                                                )
-                                                Text(
-                                                    text = move.move.name,
-                                                    fontSize = 20.sp,
-                                                    fontStyle = FontStyle.Italic
-                                                )
-                                            }
+                AnimatedVisibility(visible = isClicked) {
+                    LazyHorizontalGrid(
+                        rows = GridCells.Fixed(2), modifier = Modifier
+                            .fillMaxWidth()
+                            .height(100.dp)
+                    ) {
+                        pokemon.moves.forEach { move ->
+                            if (move.version_group_details[0].level_learned_at != 0) {
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .padding(8.dp)
+                                            .clip(RoundedCornerShape(20.dp))
+                                            .background(Color(0xFFAAFF00))
+                                            .padding(horizontal = 8.dp),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Row(verticalAlignment = Alignment.CenterVertically) {
+                                            Text(
+                                                text = "${move.version_group_details[0].level_learned_at}",
+                                                fontSize = 20.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            Icon(
+                                                Icons.Rounded.ArrowForward,
+                                                "Level Arrow",
+                                                modifier = Modifier
+                                            )
+                                            Text(
+                                                text = move.move.name,
+                                                fontSize = 20.sp,
+                                                fontStyle = FontStyle.Italic
+                                            )
                                         }
                                     }
                                 }
                             }
                         }
                     }
+                }
+
+                IconButton(
+                    onClick = {
+                        statusIsClicked = !statusIsClicked
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .width(200.dp)
+                            .clip(RoundedCornerShape(16.dp))
+                            .background(Color(0xFF65CABB)),
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "STATS",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp,
+                        )
+                        Icon(
+                            if (statusIsClicked) Icons.Default.KeyboardArrowDown else Icons.Default.KeyboardArrowRight,
+                            "Status Button"
+                        )
+                    }
+                }
+
+                AnimatedVisibility(visible = statusIsClicked, modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(Color(0xFFCACACA))) {
+                    Column {
+                        pokemon.stats.forEach {stat ->
+                            Text(text = "${stat.stat.name.uppercase()} -> ${stat.base_stat}",
+                                modifier = Modifier.align(Alignment.CenterHorizontally))
+                        }
+                    }
+                }
+
             }
 
         } ?: Text(text = "An error occurred during the pokemon detail loading")

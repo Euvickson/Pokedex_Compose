@@ -13,8 +13,18 @@ data class PokemonInfo(
     val id: Int,
     val name: String,
     val types: List<PokemonType>,
-    val moves: List<PokemonMoves>
+    val moves: List<PokemonMoves>,
+    val stats: List<Stats>
 )
+
+data class Stats(
+    val base_stat: Int,
+    val stat: StatInfo
+)
+
+data class StatInfo (
+    val name: String
+        )
 
 data class PokemonType (
     val slot: Int,
