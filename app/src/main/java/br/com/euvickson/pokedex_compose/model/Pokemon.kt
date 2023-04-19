@@ -10,7 +10,9 @@ data class Pokemon (
     val type1: String,
     val type2: String? = null,
     val moves: List<PokemonMoves>,
-    val stats: List<Stats>
+    val stats: List<Stats>,
+    val evolutionOne: String? = null,
+    val evolutionTwo: String? = null
         ) {
     val formattedNumber = pokedexId.toString().padStart(length = 3, padChar = '0')
 }

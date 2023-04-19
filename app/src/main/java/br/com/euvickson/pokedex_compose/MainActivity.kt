@@ -10,7 +10,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
@@ -212,6 +211,13 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.align(Alignment.CenterHorizontally))
                         }
                     }
+                }
+
+                pokemon.evolutionOne?.let {
+                    Text(text = it)
+                }
+                pokemon.evolutionTwo?.let {
+                    Text(text = it)
                 }
 
             }

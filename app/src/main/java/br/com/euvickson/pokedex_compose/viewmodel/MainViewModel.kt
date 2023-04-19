@@ -13,35 +13,48 @@ class MainViewModel: ViewModel() {
     val listFlow: StateFlow<List<Pokemon>>
         get() = pokemonList
 
-    var message: String? = null
+    private var message: String? = null
     init {
         viewModelScope.launch {
             try {
-                val pokemonListResponse = PokemonService.getPokemonInstance().getFullListPokemon().results
+                val pokemonservice = PokemonService.getPokemonInstance()
+                val pokemonListResponse = pokemonservice.getFullListPokemon().results
 
                 pokemonListResponse.forEach {
-                    val number = it.url.replace("https://pokeapi.co/api/v2/pokemon/", "")
+                    val pokemonNumber = it.url.replace("https://pokeapi.co/api/v2/pokemon/", "")
                         .replace("/", "").toInt()
 
-                    val resultPokemonInfo = PokemonService.getPokemonInstance().getPokemon(number)
+                    val resultPokemonInfo = pokemonservice.getPokemon(pokemonNumber)
+                    val pokemonSpeciesInfo = pokemonservice.getSpecies(pokemonNumber)
+                    val speciesNumber = pokemonSpeciesInfo.evolution_chain.url.replace(
+                        "https://pokeapi.co/api/v2/evolution-chain/",
+                        ""
+                    ).replace("/", "").toInt()
+
+                    val pokemonEvolutions = pokemonservice.getEvolution(speciesNumber)
+
                     if (resultPokemonInfo.types.size < 2) {
                         pokemonList.value += Pokemon(
                             pokedexId = resultPokemonInfo.id,
                             name = resultPokemonInfo.name,
-                            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonNumber}.png",
                             type1 = resultPokemonInfo.types[0].type.name,
                             moves = resultPokemonInfo.moves,
-                            stats = resultPokemonInfo.stats
+                            stats = resultPokemonInfo.stats,
+                            evolutionOne = pokemonEvolutions.chain.evolves_to[0].species.name,
+                            evolutionTwo = pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name
                         )
                     } else {
                         pokemonList.value += Pokemon(
                             pokedexId = resultPokemonInfo.id,
                             name = resultPokemonInfo.name,
-                            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${number}.png",
+                            imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonNumber}.png",
                             type1 = resultPokemonInfo.types[0].type.name,
                             type2 = resultPokemonInfo.types[1].type.name,
                             moves = resultPokemonInfo.moves,
-                            stats = resultPokemonInfo.stats
+                            stats = resultPokemonInfo.stats,
+                            evolutionOne = pokemonEvolutions.chain.evolves_to[0].species.name,
+                            evolutionTwo = pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name
                         )
                     }
                 }
