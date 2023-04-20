@@ -32,6 +32,11 @@ class MainViewModel: ViewModel() {
                     ).replace("/", "").toInt()
 
                     val pokemonEvolutions = pokemonservice.getEvolution(speciesNumber)
+                    val evolutions = mapOf(
+                        pokemonEvolutions.chain.species.name to 1,
+                        pokemonEvolutions.chain.evolves_to[0].species.name to 2,
+                        pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to 3
+                    )
 
                     if (resultPokemonInfo.types.size < 2) {
                         pokemonList.value += Pokemon(
@@ -41,8 +46,7 @@ class MainViewModel: ViewModel() {
                             type1 = resultPokemonInfo.types[0].type.name,
                             moves = resultPokemonInfo.moves,
                             stats = resultPokemonInfo.stats,
-                            evolutionOne = pokemonEvolutions.chain.evolves_to[0].species.name,
-                            evolutionTwo = pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name
+                            evolutions = evolutions
                         )
                     } else {
                         pokemonList.value += Pokemon(
@@ -53,8 +57,7 @@ class MainViewModel: ViewModel() {
                             type2 = resultPokemonInfo.types[1].type.name,
                             moves = resultPokemonInfo.moves,
                             stats = resultPokemonInfo.stats,
-                            evolutionOne = pokemonEvolutions.chain.evolves_to[0].species.name,
-                            evolutionTwo = pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name
+                            evolutions = evolutions,
                         )
                     }
                 }

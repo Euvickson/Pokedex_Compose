@@ -213,13 +213,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
-                pokemon.evolutionOne?.let {
-                    Text(text = it)
+                pokemon.evolutions.forEach {
+                    Text(text = it.key)
                 }
-                pokemon.evolutionTwo?.let {
-                    Text(text = it)
-                }
-
             }
 
         } ?: Text(text = "An error occurred during the pokemon detail loading")
