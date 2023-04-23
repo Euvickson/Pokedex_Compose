@@ -65,7 +65,23 @@ class MainActivity : ComponentActivity() {
                             val pokemon = pokemonList.find { pokemon ->
                                 pokemon.pokedexId == it.arguments?.getInt("id")
                             }
-                            DetailScreen(pokemon)
+
+                            val evolutionsIds = mutableListOf<Int>()
+
+                            pokemon?.let {
+                                it.evolutions.forEach {evolutionPokemon ->
+                                    val pokemonEvolutionItem = pokemonList.find {
+                                        it.name == evolutionPokemon.key
+                                    }
+                                    pokemonEvolutionItem?.let {evolutionItem ->
+                                        evolutionsIds.add(evolutionItem.pokedexId)
+                                    }
+                                }
+                            }
+
+                            evolutionsIds.sort()
+
+                            DetailScreen(pokemon, evolutionsIds)
                         }
                     }
 
@@ -76,7 +92,7 @@ class MainActivity : ComponentActivity() {
 
     @OptIn(ExperimentalGlideComposeApi::class)
     @Composable
-    private fun DetailScreen(nullablePokemon: Pokemon?) {
+    private fun DetailScreen(nullablePokemon: Pokemon?, evolutionsIds: MutableList<Int>) {
 
         var isClicked by remember { mutableStateOf(false) }
         var statusIsClicked by remember { mutableStateOf(false) }
@@ -216,6 +232,16 @@ class MainActivity : ComponentActivity() {
                 Text(text = "EVOLUTION CHAIN")
                 pokemon.evolutions.forEach {
                     Text(text = it.key)
+                }
+
+                evolutionsIds.forEach {
+                    GlideImage(
+                        model = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/versions/generation-v/black-white/animated/$it.gif",
+                        contentDescription = "Pokemon Image",
+                        modifier = Modifier
+                            .heightIn(max = 125.dp, min = 100.dp)
+                            .widthIn(max = 125.dp, min = 100.dp)
+                    )
                 }
             }
 

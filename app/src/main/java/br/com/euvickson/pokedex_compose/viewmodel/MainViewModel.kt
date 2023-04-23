@@ -37,9 +37,10 @@ class MainViewModel: ViewModel() {
                     if (pokemonEvolutions.chain.evolves_to.isNotEmpty()) {
                         evolutions += pokemonEvolutions.chain.evolves_to[0].species.name to 2
                         if (pokemonEvolutions.chain.evolves_to[0].evolves_to.isNotEmpty()) {
-                            pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to 3
+                            evolutions += pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to 3
                         }
                     }
+
 
                     if (resultPokemonInfo.types.size < 2) {
                         pokemonList.value += Pokemon(
