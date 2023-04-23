@@ -32,11 +32,14 @@ class MainViewModel: ViewModel() {
                     ).replace("/", "").toInt()
 
                     val pokemonEvolutions = pokemonservice.getEvolution(speciesNumber)
-                    val evolutions = mapOf(
-                        pokemonEvolutions.chain.species.name to 1,
-                        pokemonEvolutions.chain.evolves_to[0].species.name to 2,
-                        pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to 3
-                    )
+                    val evolutions = mutableMapOf(pokemonEvolutions.chain.species.name to 1)
+
+                    if (pokemonEvolutions.chain.evolves_to.isNotEmpty()) {
+                        evolutions += pokemonEvolutions.chain.evolves_to[0].species.name to 2
+                        if (pokemonEvolutions.chain.evolves_to[0].evolves_to.isNotEmpty()) {
+                            pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to 3
+                        }
+                    }
 
                     if (resultPokemonInfo.types.size < 2) {
                         pokemonList.value += Pokemon(
@@ -57,7 +60,7 @@ class MainViewModel: ViewModel() {
                             type2 = resultPokemonInfo.types[1].type.name,
                             moves = resultPokemonInfo.moves,
                             stats = resultPokemonInfo.stats,
-                            evolutions = evolutions,
+                            evolutions = evolutions
                         )
                     }
                 }

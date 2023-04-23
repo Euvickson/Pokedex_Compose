@@ -213,6 +213,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
 
+                Text(text = "EVOLUTION CHAIN")
                 pokemon.evolutions.forEach {
                     Text(text = it.key)
                 }
