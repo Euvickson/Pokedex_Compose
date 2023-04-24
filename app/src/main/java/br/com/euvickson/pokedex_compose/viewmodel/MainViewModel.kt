@@ -1,5 +1,6 @@
 package br.com.euvickson.pokedex_compose.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import br.com.euvickson.pokedex_compose.api.PokemonService
@@ -31,16 +32,21 @@ class MainViewModel: ViewModel() {
                         ""
                     ).replace("/", "").toInt()
 
+                    var mapNumber = 1
+
                     val pokemonEvolutions = pokemonservice.getEvolution(speciesNumber)
-                    val evolutions = mutableMapOf(pokemonEvolutions.chain.species.name to 1)
+                    val evolutions = mutableMapOf(pokemonEvolutions.chain.species.name to mapNumber)
 
                     if (pokemonEvolutions.chain.evolves_to.isNotEmpty()) {
-                        evolutions += pokemonEvolutions.chain.evolves_to[0].species.name to 2
+                        pokemonEvolutions.chain.evolves_to.forEach {evolution ->
+                            mapNumber++
+                            evolutions += evolution.species.name to mapNumber
+                        }
                         if (pokemonEvolutions.chain.evolves_to[0].evolves_to.isNotEmpty()) {
-                            evolutions += pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to 3
+                            mapNumber++
+                            evolutions += pokemonEvolutions.chain.evolves_to[0].evolves_to[0].species.name to mapNumber
                         }
                     }
-
 
                     if (resultPokemonInfo.types.size < 2) {
                         pokemonList.value += Pokemon(
